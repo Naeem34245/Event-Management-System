@@ -17,13 +17,13 @@
             <p class="text-sm text-gray-500">Category: <span class="font-semibold">{{ event.category.name }}</span></p>
         </div>
         {% empty %}
-        <p class="text-gray-500 italic">No events scheduled for today.</p>
+        <p class="text-gray-500 italic bold">No events for today.</p>
         {% endfor %}
     </div>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm">
-    <div class="grid grid-cols-5 p-4 border-b border-gray-100 text-sm font-semibold text-gray-500">
+    <div class="grid grid-cols-5 p-4 border-b border-gray-600 text-sm font-semibold text-gray-500">
       <div class="col-span-2">EVENT NAME & CATEGORY</div>
       <div>DATE & TIME</div>
       <div>PARTICIPANTS</div>
