@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import dj_database_url 
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)*2n1ekyq5lsj5uw=hae)l90*2cn#p-zbgwqxv6_p(w@$apjiy
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS=['https://*.onrender.com','http://127.0.0.1:8000/']
+CSRF_TRUSTED_ORIGINS=['https://*.onrender.com','http://127.0.0.1:8000']
 
 
 # Application definition
@@ -83,16 +83,25 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # }
 # For Postgress sql
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Event_Management_System',
+#         'USER': 'postgres',
+#         'PASSWORD': 'naeem@123A',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Event_Management_System',
-        'USER': 'postgres',
-        'PASSWORD': 'naeem@123A',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_management_system_pohx_user:KdgJEeZTz0zQbzhAjbYGTrsjzooMqfIA@dpg-d6ers7buibrs73dlgfp0-a.oregon-postgres.render.com/event_management_system_pohx',
+        conn_max_age=600
+    )
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
