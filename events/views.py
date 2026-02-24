@@ -10,6 +10,8 @@ def organizer_dashboard(request):
     filter_type = request.GET.get('type', 'all')
     search_query = request.GET.get('search', '')
     category_filter = request.GET.get('category', '')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
     total_participants = Participant.objects.aggregate(total=Count('id'))['total'] or 0
 
     counts = Event.objects.aggregate(
@@ -27,6 +29,8 @@ def organizer_dashboard(request):
     
     if category_filter:
         base_query = base_query.filter(category_id=category_filter)
+    if start_date and end_date:
+        base_query = base_query.filter(date__range=[start_date, end_date])
 
     if filter_type == 'upcoming':
         events = base_query.filter(date__gt=today)
@@ -44,7 +48,10 @@ def organizer_dashboard(request):
         "counts": counts,
         "total_participants": total_participants,
         "search_query": search_query,
-        "categories": categories
+        "categories": categories,
+        "start_date": start_date,
+        "end_date": end_date,
+        "today": today,
     }
     return render(request, "dashboard/organizer_dashboard.html", context)
 

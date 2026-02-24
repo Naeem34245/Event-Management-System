@@ -1,69 +1,115 @@
 {% extends "dashboard/dashboard.html" %}
-
-{% block title %}Organizer Dashboard{% endblock title %}
-
+{% block title %}
+Organizer Dashboard{%endblock title %}
 {% block content %}
 
 <div class="mb-8">
-    <h2 class="text-xl font-semibold mb-4 text-gray-700">Today's Events</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {% for event in todays_events %}
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-rose-100">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-bold text-lg text-gray-800">{{ event.name }}</h3>
-                <span class="text-xs bg-rose-100 text-rose-800 px-2 py-1 rounded-full">{{ event.time|time:"H:i" }}</span>
-            </div>
-            <p class="text-sm text-gray-500 mb-2 flex items-center gap-1">📍 {{ event.location }}</p>
-            <p class="text-sm text-gray-500">Category: <span class="font-semibold">{{ event.category.name }}</span></p>
-        </div>
-        {% empty %}
-        <p class="text-gray-500 italic bold">No events for today.</p>
-        {% endfor %}
+  <h2 class="text-xl font-semibold mb-4 text-gray-700">Today's Events</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for event in todays_events %}
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-rose-100">
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="font-bold text-lg text-gray-800">{{ event.name }}</h3>
+        <span class="text-xs bg-rose-100 text-rose-800 px-2 py-1 rounded-full"
+          >{{ event.time|time:"H:i" }}</span
+        >
+      </div>
+      <p class="text-sm text-gray-500 mb-2 flex items-center gap-1">
+        📍 {{ event.location }}
+      </p>
+      <p class="text-sm text-gray-500">
+        Category: <span class="font-semibold">{{ event.category.name }}</span>
+      </p>
     </div>
+    {% empty %}
+    <p class="text-gray-500 italic bold">No events for today.</p>
+    {% endfor %}
+  </div>
 </div>
+<form method="GET" class="flex gap-4 mb-6 items-end">
 
-<div class="bg-white rounded-xl shadow-sm">
-    <div class="grid grid-cols-5 p-4 border-b border-gray-600 text-sm font-semibold text-gray-500">
-      <div class="col-span-2">EVENT NAME & CATEGORY</div>
-      <div>DATE & TIME</div>
-      <div>PARTICIPANTS</div>
-      <div class="text-right">ACTIONS</div>
+    <div>
+        <label class="block text-sm font-medium text-gray-600">Start Date</label>
+        <input type="date" name="start_date" value="{{ start_date }}"
+               class="border-2 border-gray-300 p-2 rounded-lg focus:border-rose-500 focus:ring-rose-500">
     </div>
-    
-    <div class="divide-y divide-gray-100">
-     {% for event in events %}
-      <div class="grid grid-cols-5 gap-4 p-4 items-center hover:bg-gray-50 transition">
-        
-        <div class="col-span-2 flex items-center gap-3">
-          <div class="w-2 h-2 rounded-full {% if event.date > today %}bg-green-500{% else %}bg-gray-400{% endif %}"></div>
-          <div>
-            <p class="font-semibold text-gray-800">{{ event.name }}</p>
-            <p class="text-xs text-gray-500">{{ event.category.name }}</p>
-          </div>
-        </div>
-        
-        <div class="text-sm text-gray-600">
-            <p>{{ event.date|date:"M d, Y" }}</p>
-            <p class="text-xs">{{ event.time|time:"H:i" }}</p>
-        </div>
 
+    <div>
+        <label class="block text-sm font-medium text-gray-600">End Date</label>
+        <input type="date" name="end_date" value="{{ end_date }}"
+               class="border-2 border-gray-300 p-2 rounded-lg focus:border-rose-500 focus:ring-rose-500">
+    </div>
+
+    <button type="submit"
+            class="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700">
+        Filter
+    </button>
+
+</form>
+<div class="bg-white rounded-xl shadow-sm">
+  <div
+    class="grid grid-cols-5 p-4 border-b border-gray-600 text-sm font-semibold text-gray-500"
+  >
+    <div class="col-span-2">EVENT NAME & CATEGORY</div>
+    <div>DATE & TIME</div>
+    <div>PARTICIPANTS</div>
+    <div class="text-right">ACTIONS</div>
+  </div>
+
+  <div class="divide-y divide-gray-100">
+    {% for event in events %}
+    <div
+      class="grid grid-cols-5 gap-4 p-4 items-center hover:bg-gray-50 transition"
+    >
+      <div class="col-span-2 flex items-center gap-3">
+        <div
+          class="w-2 h-2 rounded-full {% if event.date > today %}bg-green-500{% else %}bg-gray-400{% endif %}"
+        ></div>
         <div>
-            <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold">
-                {{ event.participants.count }} Joined
-            </span>
-        </div>
-
-        <div class="flex justify-end gap-2 text-sm">
-          <a href="{% url 'update-event' event.id %}" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition">Edit</a>
-          <form action="{% url 'delete-event' event.id %}" method="POST" class="inline">
-            {% csrf_token %}
-            <button type="submit" class="px-3 py-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition">Delete</button>
-          </form>
+          <p class="font-semibold text-gray-800">{{ event.name }}</p>
+          <p class="text-xs text-gray-500">{{ event.category.name }}</p>
         </div>
       </div>
-     {% empty %}
-      <div class="p-8 text-center text-gray-500">No events found matching your criteria.</div>
-     {% endfor %}
+
+      <div class="text-sm text-gray-600">
+        <p>{{ event.date|date:"M d, Y" }}</p>
+        <p class="text-xs">{{ event.time|time:"H:i" }}</p>
+      </div>
+
+      <div>
+        <span
+          class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold"
+        >
+          {{ event.participants.count }} Joined
+        </span>
+      </div>
+
+      <div class="flex justify-end gap-2 text-sm">
+        <a
+          href="{% url 'update-event' event.id %}"
+          class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+          >Edit</a
+        >
+        <form
+          action="{% url 'delete-event' event.id %}"
+          method="POST"
+          class="inline"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="px-3 py-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
     </div>
+    {% empty %}
+    <div class="p-8 text-center text-gray-500">
+      No events found matching your criteria.
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock content %}
