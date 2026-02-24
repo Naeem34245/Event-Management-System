@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}EMS Dashboard{% endblock title %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script> <style>body { font-family: "Inter", sans-serif; }</style>
+  </head>
+  <body class="bg-gray-50 p-6">
+    <div class="max-w-[1400px] mx-auto">
+      
+      <header class="flex justify-between items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <h1 class="text-2xl font-bold text-rose-600">EventMaster</h1>
+        
+        <form method="GET" action="{% url 'organizer-dashboard' %}" class="flex gap-2 w-1/3">
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search events or locations..." class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-rose-500 outline-none">
+            <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700">Search</button>
+        </form>
+
+        <div class="flex gap-4 items-center">
+            <a href="{% url 'create-event' %}" class="text-sm font-semibold text-gray-600 hover:text-rose-600">New Event</a>
+            <button class="w-10 h-10 bg-rose-500 rounded-full text-white font-semibold shadow">A</button>
+        </div>
+      </header>
+
+      <main>
+        <div class="grid grid-cols-4 gap-6 mb-8">
+          
+          <a href="{% url 'organizer-dashboard' %}?type=all" class="block transition hover:scale-105">
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-blue-500">
+              <h3 class="text-sm font-medium text-gray-500 mb-2">TOTAL EVENTS</h3>
+              <p class="text-3xl font-semibold">{{ counts.total }}</p>
+            </div>
+          </a>
+
+          <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-purple-500 cursor-default">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">TOTAL PARTICIPANTS</h3>
+            <p class="text-3xl font-semibold">{{ total_participants }}</p>
+          </div>
+
+          <a href="{% url 'organizer-dashboard' %}?type=upcoming" class="block transition hover:scale-105">
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-green-500">
+              <h3 class="text-sm font-medium text-gray-500 mb-2">UPCOMING EVENTS</h3>
+              <p class="text-3xl font-semibold">{{ counts.upcoming }}</p>
+            </div>
+          </a>
+
+          <a href="{% url 'organizer-dashboard' %}?type=past" class="block transition hover:scale-105">
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-gray-400">
+              <h3 class="text-sm font-medium text-gray-500 mb-2">PAST EVENTS</h3>
+              <p class="text-3xl font-semibold">{{ counts.past }}</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="mb-4">
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="px-4 py-3 rounded-lg mb-2 text-white {% if message.tags == 'success' %}bg-green-500{% else %}bg-red-500{% endif %}">{{message}}</div>
+              {% endfor %}
+          {% endif %}
+        </div>
+
+        {% block content %}{% endblock content %}
+        
+      </main>
+    </div>
+  </body>
+</html>
