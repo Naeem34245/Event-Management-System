@@ -1,9 +1,7 @@
-from django.urls import path
-from . import views
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', views.organizer_dashboard, name="organizer-dashboard"),
-    path('create-event/', views.create_event, name='create-event'),
-    path('update-event/<int:id>/', views.update_event, name='update-event'),
-    path('delete-event/<int:id>/', views.delete_event, name='delete-event'),
+    path('admin/', admin.site.urls),
+    path('', include('events.urls'))
 ]
